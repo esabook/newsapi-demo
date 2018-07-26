@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <stroke
+                android:color="@color/card_green"
+                android:width="@dimen/line_width"/>
+            <corners
+                android:bottomLeftRadius="@dimen/line_radius_small"
+                android:bottomRightRadius="@dimen/line_radius_small"
+                android:topLeftRadius="@dimen/line_radius_small"
+                android:topRightRadius="@dimen/line_radius_small" />
+        </shape>
+    </item>
+</selector>
