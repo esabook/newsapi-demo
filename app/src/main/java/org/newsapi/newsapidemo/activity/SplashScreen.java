@@ -9,15 +9,18 @@ import android.view.View;
 
 import org.newsapi.newsapidemo.R;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class SplashScreen extends AppCompatActivity {
 
-    private View mContentView;
+    @BindView(R.id.fullscreen_content) View mContentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-        mContentView = findViewById(R.id.fullscreen_content);
+        ButterKnife.bind(this);
         setupFullscreen();
         onDismis();
     }

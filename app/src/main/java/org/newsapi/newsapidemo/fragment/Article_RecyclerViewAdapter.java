@@ -11,17 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.GsonBuilder;
 
 import org.newsapi.newsapidemo.R;
 import org.newsapi.newsapidemo.model.Article;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Article_RecyclerViewAdapter extends RecyclerView.Adapter<Article_RecyclerViewAdapter.ViewHolder> implements Filterable {
 
-    private ArticleFilter filter;
+    private Article_Filter filter;
     private List<Article> mValues;
     private List<Article> tmpValues;
 
@@ -66,50 +64,21 @@ public class Article_RecyclerViewAdapter extends RecyclerView.Adapter<Article_Re
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return tmpValues.size();
     }
 
     @Override
     public Filter getFilter() {
         if (filter == null) {
-            filter = new ArticleFilter();
+            filter = new Article_Filter(mValues);
+            filter.setOnArticleResult(result ->{
+                this.tmpValues = result;
+            });
         }
         return filter;
     }
 
-    private class ArticleFilter extends Filter {
 
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            FilterResults results = new FilterResults();
-
-            if (constraint != null && constraint.length() > 0) {
-                ArrayList<Article> filteredList = new ArrayList<Article>();
-
-                for (Article cs : mValues) {
-                    String str = new GsonBuilder().create().toJson(cs);
-
-                    if (str.toLowerCase().contains(constraint)) {
-                        filteredList.add(cs);
-                    }
-                }
-                results.count = filteredList.size();
-                results.values = filteredList;
-            } else {
-                results.count = mValues.size();
-                results.values = mValues;
-
-            }
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            tmpValues = (ArrayList<Article>) results.values;
-            notifyDataSetChanged();
-        }
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;

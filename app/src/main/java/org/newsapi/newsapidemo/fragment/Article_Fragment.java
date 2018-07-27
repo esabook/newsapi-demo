@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.SearchView;
 
 import org.newsapi.newsapidemo.R;
 import org.newsapi.newsapidemo.api.ApiFactory;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import butterknife.ButterKnife;
 import me.everything.android.ui.overscroll.IOverScrollDecor;
 import me.everything.android.ui.overscroll.IOverScrollState;
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper;
@@ -27,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Article_Fragment extends Fragment {
+public class Article_Fragment extends Fragment implements SearchView.OnQueryTextListener {
 
     private static String PAGE = "page";
 
@@ -72,19 +74,29 @@ public class Article_Fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_article_list, container, false);
+
+        View root = inflater.inflate(R.layout.fragment_article_list, container, false);
+        View view = ButterKnife.findById(root, R.id.list);
+        SearchView searchView = ButterKnife.findById(root, R.id.searchView);
+
+        searchView.setOnQueryTextListener(this);
+        searchView.setOnClickListener(v->{
+            searchView.setIconified(false);
+        });
 
         // Set the adapter
         if (view instanceof RecyclerView) {
-            Context context = view.getContext();
+            Context context = root.getContext();
             articles = new ArrayList<Article>();
 
 
+            //setup recycle view
             recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setAdapter(new Article_RecyclerViewAdapter(articles, mListener));
             getArticle(mSource, mPage, false);
 
+            //on next page
             IOverScrollDecor decor = OverScrollDecoratorHelper.setUpOverScroll(recyclerView, OverScrollDecoratorHelper.ORIENTATION_VERTICAL);
             decor.setOverScrollUpdateListener((dec, state, offset)->{
 
@@ -105,7 +117,7 @@ public class Article_Fragment extends Fragment {
 
             });
         }
-        return view;
+        return root;
     }
 
 
@@ -125,6 +137,7 @@ public class Article_Fragment extends Fragment {
             public void onResponse(Call<ArticleDTO> call, Response<ArticleDTO> response) {
                 if (!nextMode){
                     articles.clear();
+                    mPage = 1;
                 }
                 articles.addAll(Arrays.asList(Objects.requireNonNull(response.body()).articles));
                 recyclerView.getAdapter().notifyDataSetChanged();
@@ -151,6 +164,18 @@ public class Article_Fragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (articles == null){return false;}
+        ((Article_RecyclerViewAdapter)recyclerView.getAdapter()).getFilter().filter(newText);
+        return false;
     }
 
 

@@ -11,6 +11,9 @@ import org.newsapi.newsapidemo.model.Source;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class NewsSource_RecyclerViewAdapter extends RecyclerView.Adapter<NewsSource_RecyclerViewAdapter.ViewHolder> {
 
     private final List<Source> mValues;
@@ -38,13 +41,10 @@ public class NewsSource_RecyclerViewAdapter extends RecyclerView.Adapter<NewsSou
         holder.mUrl.setText(mValues.get(position).url);
         holder.mCategory.setText(mValues.get(position).category);
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.mView.setOnClickListener(v-> {
                 if (null != mListener) {
                     mListener.onNewsSourceInteraction(holder.mSourceItem);
                 }
-            }
         });
     }
 
@@ -55,23 +55,20 @@ public class NewsSource_RecyclerViewAdapter extends RecyclerView.Adapter<NewsSou
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mName;
-        public final TextView mLanguange;
-        public final TextView mDescription;
-        public final TextView mUrl;
-        public final TextView mCategory;
+
+        @BindView(R.id.name) public TextView mName;
+        @BindView(R.id.language) public TextView mLanguange;
+        @BindView(R.id.description) public TextView mDescription;
+        @BindView(R.id.url) public TextView mUrl;
+        @BindView(R.id.category) public TextView mCategory;
 
         public Source mSourceItem;
 
         public ViewHolder(View view) {
+
             super(view);
             mView = view;
-
-            mName = (TextView) view.findViewById(R.id.name);
-            mLanguange = (TextView) view.findViewById(R.id.language);
-            mDescription = (TextView) view.findViewById(R.id.description);
-            mUrl = (TextView) view.findViewById(R.id.url);
-            mCategory = (TextView) view.findViewById(R.id.category);
+            ButterKnife.bind(this, view);
         }
 
         @Override

@@ -31,7 +31,6 @@ public class MainActivity extends FragmentActivity implements NewsSource_Fragmen
         pager.setPageTransformer(true, new ZoomOutViewPager());
         pager.setAdapter(myPagerAdapter);
 
-
     }
 
 
