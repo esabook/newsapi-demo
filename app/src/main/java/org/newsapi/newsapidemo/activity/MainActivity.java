@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import org.newsapi.newsapidemo.R;
 import org.newsapi.newsapidemo.fragment.Article_Fragment;
@@ -30,6 +31,9 @@ public class MainActivity extends FragmentActivity implements NewsSource_Fragmen
         pager = (ViewPager) findViewById(R.id.news_pager);
         pager.setPageTransformer(true, new ZoomOutViewPager());
         pager.setAdapter(myPagerAdapter);
+
+        Intent i = getIntent();
+        Toast.makeText(this, i.getDataString(), Toast.LENGTH_LONG).show();
 
     }
 
